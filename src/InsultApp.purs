@@ -37,5 +37,7 @@ update model (ReturnNewInsult s) = model { insult = s } :> []
 view :: Model -> Html Message
 view model =
   HE.main "main"
-  [ HE.h1 [ HV.onClick GetNewInsult] [ HE.text model.insult ] 
+  [ HE.article_ 
+    [ HE.h1 [ HV.onClick GetNewInsult] [ HE.text model.insult ] 
+    ]
   ]

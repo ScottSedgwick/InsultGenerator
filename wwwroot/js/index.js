@@ -2008,6 +2008,23 @@
       };
     };
   }
+  function createDatalessElementNode(tag) {
+    return function(potentialChildren) {
+      let children = potentialChildren, text2 = void 0;
+      if (potentialChildren.length === 1 && potentialChildren[0].nodeType == textNode) {
+        children = void 0;
+        text2 = potentialChildren[0].text;
+      }
+      return {
+        nodeType: elementNode,
+        node: void 0,
+        tag,
+        nodeData: {},
+        children,
+        text: text2
+      };
+    };
+  }
   function text(value) {
     return {
       nodeType: textNode,
@@ -2076,6 +2093,14 @@
       toNode: concatMap(toNode(dictToNode))
     };
   };
+  var createElement_ = function(tag) {
+    return function(dictToNode) {
+      var toNode1 = toNode(dictToNode);
+      return function(children) {
+        return createDatalessElementNode(tag)(toNode1(children));
+      };
+    };
+  };
   var createElement = function(tag) {
     return function(dictToNode) {
       var toNode1 = toNode(dictToNode);
@@ -2098,6 +2123,9 @@
     return function(dictToNode1) {
       return createElement("main")(dictToNode)(dictToNode1);
     };
+  };
+  var article_ = function(dictToNode) {
+    return createElement_("article")(dictToNode);
   };
 
   // output/Flame.Renderer.String/foreign.js
@@ -3115,6 +3143,7 @@
   // output/InsultApp/index.js
   var toNodeArray2 = /* @__PURE__ */ toNodeArray(toNodeHtmlHtml);
   var main2 = /* @__PURE__ */ main(toNodeStringNodeData)(toNodeArray2);
+  var article_2 = /* @__PURE__ */ article_(toNodeArray2);
   var h12 = /* @__PURE__ */ h1(/* @__PURE__ */ toNodeArray(toNodeNodeDataNodeData))(toNodeArray2);
   var map3 = /* @__PURE__ */ map(functorAff);
   var liftEffect3 = /* @__PURE__ */ liftEffect(monadEffectAff);
@@ -3136,13 +3165,13 @@
     return ReturnNewInsult2;
   }();
   var view = function(model) {
-    return main2("main")([h12([onClick(GetNewInsult.value)])([text(model.insult)])]);
+    return main2("main")([article_2([h12([onClick(GetNewInsult.value)])([text(model.insult)])])]);
   };
   var update = function(v) {
     return function(v1) {
       if (v1 instanceof GetNewInsult) {
-        return new Tuple(v, [map3(function($16) {
-          return Just.create(ReturnNewInsult.create($16));
+        return new Tuple(v, [map3(function($17) {
+          return Just.create(ReturnNewInsult.create($17));
         })(liftEffect3(randomInsult))]);
       }
       ;
